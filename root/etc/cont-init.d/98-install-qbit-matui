@@ -28,3 +28,27 @@ if [ ! -d /qbit-matui ]; then
 else
   echo "qbit-matUI theme is already installed. Exiting..."
 fi
+
+APP_FILEPATH='/config/qBittorrent/qBittorrent.conf'
+
+if ! grep -q "WebUI\\\RootFolder" "${APP_FILEPATH}"; then
+    echo '--------------------------------------'
+    echo '| Adding WebUI\RootFolder=/qbit-matui |'
+    echo '--------------------------------------'
+    sed -i -e '$aWebUI\\RootFolder=/qbit-matui' "${APP_FILEPATH}"
+fi
+
+if ! grep -q "WebUI\\\AlternativeUIEnabled" "${APP_FILEPATH}"; then
+    echo '------------------------------------------'
+    echo '| Adding WebUI\AlternativeUIEnabled=true |'
+    echo '------------------------------------------'
+    sed -i -e '$aWebUI\\AlternativeUIEnabled=true' "${APP_FILEPATH}"
+fi
+
+if ! grep -q "WebUI\\\RootFolder=/qbit-matui" "${APP_FILEPATH}" || ! grep -q "WebUI\\\AlternativeUIEnabled=true" "${APP_FILEPATH}"; then
+    echo '-------------------------------------------------------'
+    echo '| Updating RootFolder and AlternativeUIEnabled values |'
+    echo '-------------------------------------------------------'
+    sed -i "s/WebUI\\\AlternativeUIEnabled=.*$/WebUI\\\AlternativeUIEnabled=true/g" "${APP_FILEPATH}"
+    sed -i "s/WebUI\\\RootFolder=.*$/WebUI\\\RootFolder=\/qbit-matui/g" "${APP_FILEPATH}"
+fi
